@@ -74,14 +74,14 @@
             const billData = urlParams.get('data');
 
             if (!billData) {
-                alert('Không có dữ liệu hóa đơn.');
+                alert('Không có dữ liệu trong hóa đơn.');
                 return;
             }
 
             const billItems = JSON.parse(decodeURIComponent(billData));
             updateBillDetails(billItems);
         }
-        //Hàm chuyển số bé hơn 10 thàng dạng 01, 02, ...
+        //Hàm chuyển số bé hơn 10 thàng dạng 01, 02, 03...
         function checkTime(i){
             if(i<10)
                 i = "0" + i;
