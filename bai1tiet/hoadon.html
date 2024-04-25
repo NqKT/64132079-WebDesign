@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tính hóa đơn</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url(img/bgk); 
+        background-size:cover; 
+        background-repeat: no-repeat; 
+    }
+    .ctn {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        backdrop-filter: blur(12px);
+        background-color: rgba(255, 255, 255, 0.5);
+        position: relative;
+        padding-left: 0px; 
+        padding-right: 0px;
+    }
+    .left-image {
+        position: absolute; 
+        width: 30%;
+    }
+
+    .right-image {
+        position: absolute; 
+        top: 0; 
+        right: 0; 
+        padding: 20px;
+        width: 30%;
+    }
+
+    h1, h2 {
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        margin-left: 20px;
+        margin-right: 60px;
+    }
+    .btn{
+        display: flex;
+        justify-content: center;
+    }
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #billDetails {
+        margin-top: 10px;
+    }
+
+    #billDetails table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #billDetails th, #billDetails td {
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+
+    #billDetails th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: left;
+    }
+    .slider{
+        background-color: blanchedalmond;
+    }
+</style>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="slider">
+                <img src="img/blueberry.jpg" class="left-image">
+                <img src="img/Peach.jpg" class="left-image">
+                <img src="img/GreenTeaFrappuhot.jpg" class="left-image">
+                <img src="img/Lychee.jpg" class="left-image">
+                <img src="img/Strawberry.jpg" class="left-image">
+                <img src="img/lemon.jpg" class="left-image">
+                <img src="img/Cafésd.jpg" class="left-image">
+                <img src="img/greenmint.jpg" class="left-image">
+            </div>
+            <div class="slider">
+                <img src="img/Kiwi.jpg" class="right-image">    
+                <img src="img/Cafédx.jpg" class="right-image">   
+                <img src="img/cappuccino.jpg" class="right-image">  
+                <img src="img/Cafédx.jpg" class="right-image">   
+                <img src="img/GreenTeaFrappuccino" class="right-image">  
+                <img src="img/Blueberry2.jpg" class="right-image">   
+                <img src="img/Pineapple.jpg" class="right-image">  
+                <img src="img/espresso.jpg" class="right-image">  
+            </div>
+            <div class="ctn">
+                <h1>Tính hóa đơn</h1>
+                <form id="billForm">
+                    <div class="form-group">
+                        <label for="item">Tên sản phẩm:</label>
+                        <select id="item" required>
+                            <option value="">Chọn sản phẩm</option>
+                            <option value="Café đá xay">Café đá xay</option>
+                            <option value="Espresso">Espresso</option>
+                            <option value="Sữa đá">Café sữa đá</option>
+                            <option value="Cappuccino">Cappuccino</option>
+                            <option value="Kiwi">Sinh tố Kiwi</option>
+                            <option value="Strawberry">Sinh tố Dâu</option>
+                            <option value="Blueberry">Sinh tố Việt quất</option>
+                            <option value="Lychee">Trà Vải</option>
+                            <option value="Peach">Trà Đào</option>
+                            <option value="Grapefruit">Trà Bưởi</option>
+                            <option value="Pineapple">Trà Dứa</option>
+                            <option value="Mango">Trà Xoài</option>
+                            <option value="Green Tea">Trà xanh</option>
+                            <option value="Green Tea Frappu">Trà xanh nóng</option>
+                            <option value="Green Mint">Soda Bạc hà</option>
+                            <option value="Lemon">Soda Chanh</option>
+                            <option value="Soda Blueberry">Soda Việt quất</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Số lượng:</label>
+                        <input type="number" id="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="size">Size:</label>
+                        <select id="size">
+                            <option value="Nhỏ">Nhỏ</option>
+                            <option value="Vừa">Vừa</option>
+                            <option value="Lớn">Lớn</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="addToBill()">Thêm món</button>
+                </form>
+            </div>
+
+            <div class="ctn">
+                <h2>Hóa đơn</h2>
+                <div id="billDetails"></div>
+                <div class="btn">
+                    <button onclick="viewBill()">Xuất hóa đơn</button>
+                    <button type="button" onclick="clearBill()">Tạo hóa đơn mới</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <script>
+        // Một đối tượng chứa các món và giá của chúng
+        const menu = {
+            "Café đá xay":15000,
+            "Espresso":18000,
+            "Sữa đá":18000,
+            "Cappuccino":25000,
+            "Kiwi":25000,
+            "Strawberry":25000,
+            "Blueberry":25000,
+            "Lychee":25000,
+            "Peach":28000,
+            "Grapefruit":28000,
+            "Pineapple":25000,
+            "Mango":25000,
+            "Green Tea":28000,
+            "Green Tea Frappu":30000,
+            "Green Mint":28000,
+            "Lemon":25000,
+            "Soda Blueberry":28000,
+        };
+
+        let billItems = [];
+
+        function addToBill() {
+        const selectedItem = document.getElementById('item').value;
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const size = document.getElementById('size').value;
+
+        if (!selectedItem || isNaN(quantity) || quantity <= 0) {
+            alert('Vui lòng nhập thông tin hợp lệ.');
+            return;
+        }
+
+        let price = menu[selectedItem]; // Lấy giá từ danh sách menu
+        
+        if (!price) {
+            alert('Sản phẩm không tồn tại trong menu.');
+            return;
+        } 
+
+        if (size === 'Vừa') {
+            price += 8000; // Tăng giá thêm 4000 đồng nếu size là 'Vừa'
+        } else if (size === 'Lớn') {
+            price += 15000; // Tăng giá thêm 8000 đồng nếu size là 'Lớn'
+        }
+
+        const newItem = {
+            item: selectedItem + ' - ' + size,
+            quantity: quantity,
+            price: price
+        };
+
+        billItems.push(newItem);
+
+        updateBillDetails();
+
+        // Reset form
+        document.getElementById('item').selectedIndex = 0;
+        document.getElementById('quantity').value = '';
+        document.getElementById('size').selectedIndex = 0;
+    }
+
+
+        function updateBillDetails() {
+            const billTable = document.createElement('table');
+            billTable.innerHTML = `
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá (VNĐ)</th>
+                    <th>Thành tiền (VNĐ)</th>
+                </tr>
+            `;
+
+            let total = 0;
+
+            billItems.forEach(item => {
+                const subtotal = item.quantity * item.price;
+                total += subtotal;
+
+                billTable.innerHTML += `
+                    <tr>
+                        <td>${item.item}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price}</td>
+                        <td>${subtotal}</td>
+                    </tr>
+                `;
+            });
+
+            billTable.innerHTML += `
+                <tr>
+                    <th colspan="3">Tổng cộng</th>
+                    <td>${total}</td>
+                </tr>
+            `;
+
+            const billDetails = document.getElementById('billDetails');
+            billDetails.innerHTML = '';
+            billDetails.appendChild(billTable);
+        }
+
+        function viewBill() {
+            if (billItems.length === 0) {
+                alert('Hóa đơn của bạn đang trống.');
+                return;
+            }
+
+            const billData = encodeURIComponent(JSON.stringify(billItems));
+            window.open(`bill.html?data=${billData}`, '_blank');
+        }
+
+        // Hàm xóa hết thông tin cũ
+        function clearBill() {
+            billItems = [];
+            updateBillDetails();
+        }
+        let slideIndex = 0;
+        showSlides();
+        function showSlides(){
+            let slides=document.querySelectorAll('.slider img');
+            for(let i=0; i<slides.length; i++)
+                slides[i].style.display="none";
+            slideIndex++;
+            if(slideIndex>slides.length)
+                slideIndex=1;
+            //hiển thị hình ảnh
+            slides[slideIndex-1].style.display="block";
+            //cứ 4s xuất hiện 1 ảnh
+            setTimeout(showSlides, 2000);
+        }
+    </script>
+    </body>
+</html>

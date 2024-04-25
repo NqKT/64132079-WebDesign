@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hóa đơn</title>
+<style>
+    body{
+        background-image: url(img/ebg.jpg);
+        background-size:cover;
+        background-repeat: no-repeat; 
+    }
+    .bill-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+    .bill-table th, .bill-table td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        position: relative;
+        backdrop-filter: blur(12px);
+    }
+
+    button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+    .timer{
+        display: flex;
+        justify-content: end;
+        margin-right: 25px;
+    }
+
+</style>
+</head>
+<body onload="startTime()">
+    <div class="container">
+        <h1>Hóa đơn</h1>
+        <div class="timer">
+            <div id="timer"></div>
+        </div>
+        <div id="billDetails"></div>
+        <button onclick="printBill()">In hóa đơn</button>
+    </div>
+    
+    <script>
+        // Hàm in hóa đơn
+        function printBill() {
+            window.print();
+        }
+
+        // Hàm lấy dữ liệu hóa đơn từ URL và hiển thị nó
+        function displayBillFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const billData = urlParams.get('data');
+
+            if (!billData) {
+                alert('Không có dữ liệu hóa đơn.');
+                return;
+            }
+
+            const billItems = JSON.parse(decodeURIComponent(billData));
+            updateBillDetails(billItems);
+        }
+        //Hàm chuyển số bé hơn 10 thàng dạng 01, 02, ...
+        function checkTime(i){
+            if(i<10)
+                i = "0" + i;
+            return i;
+        }
+        //Hàm khởi tạo đồng hồ
+        function startTime(){
+            //Lấy object ngày hiện tại
+            var today =  new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            //chuyển đổi sang dạng 01, 02, 03
+            m = checkTime(m);
+            s = checkTime(s);
+            //Ghi ra trình duyệt
+            document.getElementById('timer').innerHTML = h + ":" + m + ":" + s;
+            //Dùng hàm setTimeout đẻ thiết lập gọi lại 0,5 giây/lần
+            var t = setTimeout(function(){
+                startTime();
+            }, 500);
+        }
+
+        // Hàm hiển thị chi tiết hóa đơn
+        function updateBillDetails(billItems) {
+            const billTable = document.createElement('table');
+            billTable.classList.add('bill-table'); 
+            billTable.innerHTML = `
+                <tr>
+                    <th>STT</th>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá (VNĐ)</th>
+                    <th>Thành tiền (VNĐ)</th>
+                </tr>
+            `;
+            
+            let total = 0;
+            
+            billItems.forEach((item, index) => {
+                const subtotal = item.quantity * item.price;
+                total += subtotal;
+                
+                billTable.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td> <!-- Cột STT -->
+                        <td>${item.item}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.price}</td>
+                        <td>${subtotal}</td>
+                    </tr>
+                `;
+            });
+            
+            billTable.innerHTML += `
+                <tr>
+                    <th colspan="4">Tổng cộng</th>
+                    <td>${total}</td>
+                </tr>
+            `;
+            
+            const billDetails = document.getElementById('billDetails');
+            billDetails.innerHTML = '';
+            billDetails.appendChild(billTable);
+        }
+
+        // Gọi hàm hiển thị hóa đơn từ URL khi trang được tải
+        displayBillFromUrl();
+    </script>
+</body>
+</html>
